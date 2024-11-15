@@ -1,35 +1,37 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '@/views/HomeView.vue';
+import LoginView from '@/views/LoginView.vue';
+import ProfileView from '@/views/ProfileView.vue';
+import ProfileForm from '@/components/ProfileForm.vue';
+import ChangePassword from '@/views/ChangePassword.vue';
+import AdminDashboard from '@/views/AdminDashboard.vue';
+import DepositoView from '@/views/DepositoView.vue';
+import CreateDepositoForm from '@/components/CreateDepositoForm.vue';
+import SignupView from '@/views/SignupView.vue';
+import MutasiView from '../views/MutasiView.vue';
 
-// Composables
-import { createRouter, createWebHistory } from 'vue-router/auto'
-import { routes } from 'vue-router/auto-routes'
+const routes = [
+  { path: '/', name: 'home', component: HomeView },
+  { path: '/login', name: 'login', component: LoginView },
+  { path: '/signup', name: 'signup', component: SignupView },
+  { path: '/profile', name: 'profile-view', component: ProfileView },
+  { path: '/profile-form', name: 'profile-form', component: ProfileForm },
+  { path: '/change-password', name: 'change-password', component: ChangePassword },
+  { path: '/mutasi', name: 'mutasi', component: MutasiView, },
+  { path: '/deposito', name: 'Deposito', component: DepositoView },
+  { path: '/create-deposito', name: 'CreateDepositoForm', component: CreateDepositoForm, },
+  { path: '/admin', name: 'AdminDashboard', component: AdminDashboard },
+  { path: '/logout', name: 'logout',
+    beforeEnter: (to: any, from: any, next: any) => {
+      localStorage.removeItem('user');
+      next({ name: 'login' });
+    }
+  },
+];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes,
-})
+});
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
-router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (!localStorage.getItem('vuetify:dynamic-reload')) {
-      console.log('Reloading page to fix dynamic import error')
-      localStorage.setItem('vuetify:dynamic-reload', 'true')
-      location.assign(to.fullPath)
-    } else {
-      console.error('Dynamic import error, reloading page did not fix it', err)
-    }
-  } else {
-    console.error(err)
-  }
-})
-
-router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload')
-})
-
-export default router
+export default router;
