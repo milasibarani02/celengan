@@ -86,7 +86,7 @@ export default {
         gender: '',
         dob: ''
       },
-      genderOptions: ['Male', 'Female', 'Other']
+      genderOptions: ['Male', 'Female']
     };
   },
   methods: {
@@ -95,11 +95,12 @@ export default {
       localStorage.setItem('profileData', JSON.stringify(this.profile));
 
       // Notify the user that the profile is saved
-      this.$router.push({ name: 'profile' }); // Redirect to profile page after saving
+      this.$router.push({ name: 'profile-view' }); // Redirect to profile page after saving
     }
   }
 };
 </script>
+
 
 <style scoped>
 /* Custom styling for the form and buttons */

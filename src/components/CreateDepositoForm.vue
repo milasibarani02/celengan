@@ -54,7 +54,7 @@
         <v-btn color="primary" :disabled="!valid" @click="submitDeposit">
           Buat Deposito
         </v-btn>
-        <v-btn variant="text" @click="resetForm">Batal</v-btn>
+        <v-btn variant="text" @click="cancel">Batal</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -62,10 +62,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';  // Import useRouter
 
 export default defineComponent({
   name: 'CreateDepositoForm',
   setup() {
+    const router = useRouter();  // Declare router here
+
     const depositTypes = ref([
       { id: 'maxi', name: 'Maxi Deposito', interest: 5 },
       { id: 'flexi', name: 'Flexi Deposito', interest: 3 },
@@ -117,6 +120,11 @@ export default defineComponent({
       resetForm();
     };
 
+    const cancel = () => {
+      // Menggunakan router.push untuk navigasi
+      router.push({ name: 'Deposito' });  // Pastikan nama route ini sesuai
+    };
+
     return {
       depositTypes,
       depositData,
@@ -126,6 +134,7 @@ export default defineComponent({
       errorMessage,
       submitDeposit,
       resetForm,
+      cancel, // Pastikan cancel ditambahkan ke return statement
     };
   },
 });

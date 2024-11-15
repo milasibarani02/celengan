@@ -32,6 +32,22 @@
       </v-col>
     </v-row>
 
+    <!-- Profile Information -->
+    <v-row justify="center">
+      <v-col cols="12" sm="6" class="mt-5">
+        <v-card :style="{ backgroundColor: '#F5ECED' }">
+          <v-card-title class="text-h5" :style="{ color: '#34495E' }">Profile Information</v-card-title>
+          <v-card-text>
+            <p><strong>Alamat:</strong> {{ profile.address }}</p>
+            <p><strong>No KTP:</strong> {{ profile.ktpNumber }}</p>
+            <p><strong>Nama Ibu Kandung:</strong> {{ profile.motherName }}</p>
+            <p><strong>Jenis Kelamin:</strong> {{ profile.gender }}</p>
+            <p><strong>Tanggal Lahir:</strong> {{ profile.dob }}</p>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <!-- Buttons -->
     <v-row justify="center" class="mt-4">
       <v-col cols="12" sm="6" md="4">
@@ -60,9 +76,17 @@ import NavBar from '../components/NavBar.vue';
 
 export default {
   data() {
+    // Load profile data from localStorage
+    const storedProfile = JSON.parse(localStorage.getItem('profileData'));
     const storedName = localStorage.getItem('fullname');
-    console.log('Stored Full Name:', storedName); // Pastikan data ada
     return {
+      profile: storedProfile || {
+        address: '',
+        ktpNumber: '',
+        motherName: '',
+        gender: '',
+        dob: ''
+      },
       fullName: storedName || 'No Name Available'
     };
   },
@@ -79,10 +103,5 @@ export default {
       this.$router.push({ name: 'login' }); // Sesuaikan dengan nama rute yang sesuai
     }
   }
-
 };
 </script>
-
-<style scoped>
-/* Custom styling can be added here if necessary */
-</style>

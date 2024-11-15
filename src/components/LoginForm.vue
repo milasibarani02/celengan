@@ -63,6 +63,7 @@
 <script>
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 export default {
   name: 'LoginForm',
@@ -78,7 +79,7 @@ export default {
     const router = useRouter();
 
     // Function to handle login logic
-    const handleLogin = () => {
+    const handleLogin = async () => {
       // Reset error messages before checking
       errorMessage.value = '';
       usernameError.value = '';
@@ -97,22 +98,19 @@ export default {
         return;
       }
 
-      const storedData = JSON.parse(localStorage.getItem('userData'));
+      try {
+        // Send login request to the backend
+        const response = await axios.post('http://localhost:3000/login', loginData);
 
-      // Check if user data exists and credentials match
-      if (!storedData) {
-        errorMessage.value = 'No registered user data found';
-        return;
-      }
+        // Save JWT token in localStorage
+        localStorage.setItem('authToken', response.data.token);
 
-      if (loginData.username === storedData.username && loginData.password === storedData.password) {
-        // Redirect to home if login is successful
+        // Redirect to home page on successful login
         router.push({ name: 'home' });
-      } else {
+      } catch (error) {
         errorMessage.value = 'Username or password is incorrect';
       }
     };
-
 
     // Function to navigate to Sign Up page
     const goToSignUp = () => {
@@ -130,6 +128,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .v-container {
