@@ -153,7 +153,7 @@ export default defineComponent({
   color: #34495E; /* Neutral Dark */
 }
 
-.v-list-item-content {
+.v-list-item {
   padding: 8px;
 }
 </style>

@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       // Assume the balance is fetched dynamically or passed from the backend
-      balance: 10000000, // Replace with dynamic balance data from your API or store
+      balance: 1000000000, // Replace with dynamic balance data from your API or store
     };
   },
 };

@@ -78,7 +78,7 @@ export default {
   data() {
     // Load profile data from localStorage
     const storedProfile = JSON.parse(localStorage.getItem('profileData'));
-    const storedName = localStorage.getItem('fullname');
+    const storedUserData = JSON.parse(localStorage.getItem('userData'));
     return {
       profile: storedProfile || {
         address: '',
@@ -87,7 +87,7 @@ export default {
         gender: '',
         dob: ''
       },
-      fullName: storedName || 'No Name Available'
+      fullName: storedUserData?.fullName || 'No Name Available'
     };
   },
   methods: {

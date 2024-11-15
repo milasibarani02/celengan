@@ -10,10 +10,8 @@
             @click="selectType(type)"
             class="deposit-item"
           >
-            <v-list-item-content>
               <v-list-item-title>{{ type.name }}</v-list-item-title>
               <v-list-item-subtitle>Interest Rate: {{ type.interestRate }}%</v-list-item-subtitle>
-            </v-list-item-content>
           </v-list-item>
         </v-list>
         <div v-if="depositTypes.length === 0">No deposit types available.</div>

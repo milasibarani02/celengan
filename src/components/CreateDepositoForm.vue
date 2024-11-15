@@ -1,166 +1,138 @@
 <template>
-  <v-container class="pa-4">
-    <v-card outlined class="bordered-card">
-      <v-card-title class="headline">Buat Deposito Baru</v-card-title>
-      <v-card-text>
-        <v-form ref="form" v-model="valid">
-          <!-- Dropdown Pilih Jenis Deposito -->
-          <v-select
-            v-model="depositData.type"
-            :items="depositTypes"
-            label="Pilih Jenis Deposito"
-            item-text="name"
-            item-value="id"
-            outlined
-            required
-          />
+  <v-container>
+    <v-form>
+      <!-- Dropdown untuk memilih tipe deposito -->
+      <v-select
+        v-model="selectedDepositId"
+        :items="depositTypes"
+        item-text="name"
+        item-value="id"
+        label="Pilih Tipe Deposito"
+        dense
+        outlined
+      ></v-select>
 
-          <!-- Input Jumlah Deposito -->
-          <v-text-field
-            v-model.number="depositData.amount"
-            label="Jumlah Deposito"
-            type="number"
-            prefix="Rp"
-            outlined
-            required
-          />
+      <!-- Input untuk nama tabungan -->
+      <v-text-field
+        v-model="tabunganName"
+        label="Nama Tabungan"
+        outlined
+        dense
+      ></v-text-field>
 
-          <!-- Pesan Error Saldo Tidak Cukup -->
-          <v-alert
-            v-if="errorMessage"
-            type="error"
-            border="start"
-            elevation="2"
-            class="my-3"
-          >
-            {{ errorMessage }}
-          </v-alert>
+      <!-- Input untuk jumlah deposito -->
+      <v-text-field
+        v-model="amount"
+        label="Jumlah Deposit"
+        type="number"
+        outlined
+        dense
+      ></v-text-field>
 
-          <!-- Pesan Sukses -->
-          <v-alert
-            v-if="successMessage"
-            type="success"
-            border="start"
-            elevation="2"
-            class="my-3"
-          >
-            {{ successMessage }}
-          </v-alert>
-        </v-form>
-      </v-card-text>
+      <!-- Input untuk periode deposito (bulan) -->
+      <v-text-field
+        v-model="period"
+        label="Periode (bulan)"
+        type="number"
+        outlined
+        dense
+      ></v-text-field>
 
-      <!-- Tombol Buat Deposito -->
-      <v-card-actions>
-        <v-btn color="primary" :disabled="!valid" @click="submitDeposit">
-          Buat Deposito
-        </v-btn>
-        <v-btn variant="text" @click="cancel">Batal</v-btn>
-      </v-card-actions>
-    </v-card>
+      <!-- Tombol Tambah Deposito -->
+      <v-btn color="primary" @click="addDeposit">Tambah Deposito</v-btn>
+
+      <!-- Menampilkan daftar deposito yang telah ditambahkan -->
+      <v-list>
+        <v-list-item
+          v-for="(deposit, index) in depositoList"
+          :key="index"
+        >
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ deposit.name }} - {{ deposit.tabunganName }}: Rp{{ deposit.amount }} ({{ deposit.period }} bulan)
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-form>
   </v-container>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { useRouter } from 'vue-router';  // Import useRouter
-
-export default defineComponent({
-  name: 'CreateDepositoForm',
-  setup() {
-    const router = useRouter();  // Declare router here
-
-    const depositTypes = ref([
-      { id: 'maxi', name: 'Maxi Deposito', interest: 5 },
-      { id: 'flexi', name: 'Flexi Deposito', interest: 3 },
-      { id: 'premium', name: 'Premium Deposito', interest: 7 },
-    ]);
-
-    const userBalance = ref(Number(localStorage.getItem('userBalance') || 10000000));
-    const depositData = ref({
-      type: null,
-      amount: 0,
-    });
-
-    const valid = ref(false);
-    const successMessage = ref('');
-    const errorMessage = ref('');
-
-    const resetForm = () => {
-      depositData.value = { type: null, amount: 0 };
-      successMessage.value = '';
-      errorMessage.value = '';
-    };
-
-    const submitDeposit = () => {
-      if (depositData.value.amount <= 0) {
-        errorMessage.value = 'Jumlah deposito harus lebih dari 0.';
-        successMessage.value = '';
-        return;
-      }
-
-      if (depositData.value.amount > userBalance.value) {
-        errorMessage.value = 'Saldo tidak mencukupi untuk membuat deposito.';
-        successMessage.value = '';
-        return;
-      }
-
-      const myDeposits = JSON.parse(localStorage.getItem('myDeposits') || '[]');
-      myDeposits.push({
-        id: myDeposits.length + 1,
-        type: depositData.value.type,
-        amount: depositData.value.amount,
-      });
-      localStorage.setItem('myDeposits', JSON.stringify(myDeposits));
-
-      userBalance.value -= depositData.value.amount;
-      localStorage.setItem('userBalance', String(userBalance.value));
-
-      successMessage.value = 'Deposito berhasil dibuat.';
-      errorMessage.value = '';
-      resetForm();
-    };
-
-    const cancel = () => {
-      // Menggunakan router.push untuk navigasi
-      router.push({ name: 'Deposito' });  // Pastikan nama route ini sesuai
-    };
+<script>
+export default {
+  data() {
+    // Mengambil profileData dan balance dari localStorage
+    const storedProfile = JSON.parse(localStorage.getItem('profileData')) || {};
+    const storedBalance = parseInt(localStorage.getItem('balance')) || 0;
 
     return {
-      depositTypes,
-      depositData,
-      valid,
-      userBalance,
-      successMessage,
-      errorMessage,
-      submitDeposit,
-      resetForm,
-      cancel, // Pastikan cancel ditambahkan ke return statement
+      selectedDepositId: null,
+      tabunganName: '',
+      amount: null,
+      period: null,
+      balance: storedBalance,
+      depositTypes: [
+        { id: 'maxi', name: 'Maxi Deposito', interest: 5 },
+        { id: 'flexi', name: 'Flexi Deposito', interest: 3 },
+        { id: 'premium', name: 'Premium Deposito', interest: 7 },
+      ],
+      depositoList: [],
     };
   },
-});
+  methods: {
+    addDeposit() {
+      // Validasi input
+      if (!this.selectedDepositId || !this.tabunganName || !this.amount || !this.period) {
+        alert('Semua field harus diisi!');
+        return;
+      }
+
+      // Validasi apakah jumlah deposito melebihi saldo
+      const depositAmount = parseInt(this.amount);
+      if (depositAmount > this.balance) {
+        alert('Saldo Anda tidak mencukupi untuk melakukan deposito ini.');
+        return;
+      }
+
+      // Dapatkan data deposit berdasarkan selectedDepositId
+      const selectedDeposit = this.depositTypes.find(
+        (deposit) => deposit.id === this.selectedDepositId
+      );
+
+      // Buat objek deposito baru
+      const newDeposit = {
+        id: selectedDeposit.id,
+        name: selectedDeposit.name,
+        tabunganName: this.tabunganName,
+        amount: depositAmount,
+        period: this.period,
+      };
+
+      // Tambahkan ke daftar deposito
+      this.depositoList.push(newDeposit);
+
+      // Kurangi saldo pengguna
+      this.balance -= depositAmount;
+
+      // Simpan ke localStorage
+      localStorage.setItem('depositoList', JSON.stringify(this.depositoList));
+      localStorage.setItem('balance', this.balance);
+
+      // Reset form
+      this.selectedDepositId = null;
+      this.tabunganName = '';
+      this.amount = null;
+      this.period = null;
+
+      alert('Deposito berhasil ditambahkan!');
+    },
+  },
+  mounted() {
+    // Ambil data dari localStorage jika ada
+    const storedDepositoList = JSON.parse(localStorage.getItem('depositoList'));
+    if (storedDepositoList) {
+      this.depositoList = storedDepositoList;
+    }
+  },
+};
 </script>
-
-<style scoped>
-.bordered-card {
-  border: 1px solid #E2DAD7;
-  border-radius: 8px;
-}
-
-.v-select,
-.v-text-field {
-  margin-bottom: 20px;
-}
-
-.v-card-title {
-  font-weight: bold;
-  color: #34495E;
-}
-
-.v-btn {
-  margin-right: 10px;
-}
-
-.v-alert {
-  border-radius: 8px;
-}
-</style>

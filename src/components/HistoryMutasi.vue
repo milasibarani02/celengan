@@ -15,18 +15,14 @@
           <v-list>
             <!-- Jika tidak ada history deposito -->
             <v-list-item v-if="depositoHistory.length === 0">
-              <v-list-item-content>
                 <v-list-item-title>No Deposito Transactions Found</v-list-item-title>
                 <v-list-item-subtitle>Anda belum memiliki riwayat deposito.</v-list-item-subtitle>
-              </v-list-item-content>
             </v-list-item>
 
             <v-list-item-group v-else>
               <v-list-item v-for="(transaction, index) in depositoHistory" :key="index">
-                <v-list-item-content>
                   <v-list-item-title>{{ transaction.date }}</v-list-item-title>
                   <v-list-item-subtitle>{{ transaction.amount }} - {{ transaction.type }}</v-list-item-subtitle>
-                </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
           </v-list>
@@ -37,18 +33,14 @@
           <v-list>
             <!-- Jika tidak ada history topup -->
             <v-list-item v-if="topupHistory.length === 0">
-              <v-list-item-content>
                 <v-list-item-title>No Topup Transactions Found</v-list-item-title>
                 <v-list-item-subtitle>Anda belum melakukan topup.</v-list-item-subtitle>
-              </v-list-item-content>
             </v-list-item>
 
             <v-list-item-group v-else>
               <v-list-item v-for="(transaction, index) in topupHistory" :key="index">
-                <v-list-item-content>
                   <v-list-item-title>{{ transaction.date }}</v-list-item-title>
                   <v-list-item-subtitle>{{ transaction.amount }} Topup</v-list-item-subtitle>
-                </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
           </v-list>
@@ -59,18 +51,14 @@
           <v-list>
             <!-- Jika tidak ada history lainnya -->
             <v-list-item v-if="otherHistory.length === 0">
-              <v-list-item-content>
                 <v-list-item-title>No Other Transactions Found</v-list-item-title>
                 <v-list-item-subtitle>Belum ada transaksi lainnya.</v-list-item-subtitle>
-              </v-list-item-content>
             </v-list-item>
 
             <v-list-item-group v-else>
               <v-list-item v-for="(transaction, index) in otherHistory" :key="index">
-                <v-list-item-content>
                   <v-list-item-title>{{ transaction.date }}</v-list-item-title>
                   <v-list-item-subtitle>{{ transaction.amount }} - {{ transaction.type }}</v-list-item-subtitle>
-                </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
           </v-list>
@@ -164,7 +152,7 @@ export default {
   color: #7FA1C4; /* Secondary for the subtitle */
 }
 
-.v-list-item-content {
+.v-list-item {
   padding: 8px;
 }
 </style>

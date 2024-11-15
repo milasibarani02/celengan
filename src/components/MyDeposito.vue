@@ -11,12 +11,10 @@
           :key="index"
           class="deposit-item"
         >
-          <v-list-item-content>
             <v-list-item-title :style="{ color: '#34495E' }">{{ deposit.name }}</v-list-item-title>
             <v-list-item-subtitle :style="{ color: '#7FA1C4' }">
               Amount: {{ formatCurrency(deposit.amount) }}
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
       </v-list>
 

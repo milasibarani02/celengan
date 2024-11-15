@@ -9,7 +9,7 @@ import DepositoView from '@/views/DepositoView.vue';
 import CreateDepositoForm from '@/components/CreateDepositoForm.vue';
 import SignupView from '@/views/SignupView.vue';
 import MutasiView from '../views/MutasiView.vue';
-import axios from 'axios';
+// import axios from 'axios';
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -30,17 +30,19 @@ const routes = [
   },
 ];
 
-// const router = createRouter({
-//   history: createWebHistory(),
-//   routes,
-// });
-
-const instance = axios.create({
-  baseURL: 'http://localhost:5674', // Ganti dengan URL backend Anda
-  timeout: 10000,  // Waktu timeout dalam milidetik
-  headers: { 'Content-Type': 'application/json' }
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
 });
 
-export default instance;
+export default router;
 
-// export default router;
+
+
+// const instance = axios.create({
+//   baseURL: 'http://localhost:5674', // Ganti dengan URL backend Anda
+//   timeout: 10000,  // Waktu timeout dalam milidetik
+//   headers: { 'Content-Type': 'application/json' }
+// });
+
+// export default instance;
