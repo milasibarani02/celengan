@@ -1,117 +1,61 @@
 <template>
   <v-card outlined class="history-card">
-    <v-card-title class="headline">History Mutasi</v-card-title>
+    <v-card-title class="headline">Riwayat Transaksi</v-card-title>
     <v-card-text>
-      <!-- Tab untuk memilih jenis riwayat -->
-      <v-tabs v-model="activeTab" class="history-tabs">
-        <v-tab>Deposito</v-tab>
-        <v-tab>Topup</v-tab>
-        <v-tab>Other</v-tab>
-      </v-tabs>
+      <v-list>
+        <!-- Jika tidak ada riwayat transaksi -->
+        <v-list-item v-if="combinedHistory.length === 0">
+          <v-list-item-title>No Transactions Found</v-list-item-title>
+          <v-list-item-subtitle>Anda belum memiliki riwayat transaksi.</v-list-item-subtitle>
+        </v-list-item>
 
-      <v-tabs-items v-model="activeTab">
-        <!-- Tab Deposito -->
-        <v-tab-item v-if="activeTab === 0">
-          <v-list>
-            <!-- Jika tidak ada history deposito -->
-            <v-list-item v-if="depositoHistory.length === 0">
-                <v-list-item-title>No Deposito Transactions Found</v-list-item-title>
-                <v-list-item-subtitle>Anda belum memiliki riwayat deposito.</v-list-item-subtitle>
-            </v-list-item>
-
-            <v-list-item-group v-else>
-              <v-list-item v-for="(transaction, index) in depositoHistory" :key="index">
-                  <v-list-item-title>{{ transaction.date }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ transaction.amount }} - {{ transaction.type }}</v-list-item-subtitle>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-tab-item>
-
-        <!-- Tab Topup -->
-        <v-tab-item v-if="activeTab === 1">
-          <v-list>
-            <!-- Jika tidak ada history topup -->
-            <v-list-item v-if="topupHistory.length === 0">
-                <v-list-item-title>No Topup Transactions Found</v-list-item-title>
-                <v-list-item-subtitle>Anda belum melakukan topup.</v-list-item-subtitle>
-            </v-list-item>
-
-            <v-list-item-group v-else>
-              <v-list-item v-for="(transaction, index) in topupHistory" :key="index">
-                  <v-list-item-title>{{ transaction.date }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ transaction.amount }} Topup</v-list-item-subtitle>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-tab-item>
-
-        <!-- Tab Other -->
-        <v-tab-item v-if="activeTab === 2">
-          <v-list>
-            <!-- Jika tidak ada history lainnya -->
-            <v-list-item v-if="otherHistory.length === 0">
-                <v-list-item-title>No Other Transactions Found</v-list-item-title>
-                <v-list-item-subtitle>Belum ada transaksi lainnya.</v-list-item-subtitle>
-            </v-list-item>
-
-            <v-list-item-group v-else>
-              <v-list-item v-for="(transaction, index) in otherHistory" :key="index">
-                  <v-list-item-title>{{ transaction.date }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ transaction.amount }} - {{ transaction.type }}</v-list-item-subtitle>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-tab-item>
-      </v-tabs-items>
+        <!-- Tampilkan semua riwayat transaksi -->
+        <v-list-item-group v-else>
+          <v-list-item v-for="(transaction, index) in combinedHistory" :key="index">
+            <v-list-item-title>{{ transaction.date }}</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ transaction.amount }} - {{ transaction.type }}
+            </v-list-item-subtitle>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
     </v-card-text>
   </v-card>
 </template>
+
 
 <script>
 export default {
   data() {
     return {
-      activeTab: 0, // Default to Deposito tab
-      depositoHistory: [],
-      topupHistory: [],
-      otherHistory: [],
+      combinedHistory: [
+        1,2,3
+      ],
     };
   },
-  created() {
-    this.loadHistoryData(); // Load history data from localStorage when the component is created
-  },
+  // created() {
+  //   this.loadHistoryData(); // Memuat data riwayat saat komponen dibuat
+  // },
   methods: {
     loadHistoryData() {
-      // Get data from localStorage
-      const depositoData = localStorage.getItem('depositoHistory');
-      const topupData = localStorage.getItem('topupHistory');
-      const otherData = localStorage.getItem('otherHistory');
+      // Ambil data dari localStorage
+      const depositoData = JSON.parse(localStorage.getItem('depositoHistory') || '[]');
+      const topupData = JSON.parse(localStorage.getItem('topupHistory') || '[]');
+      const otherData = JSON.parse(localStorage.getItem('otherHistory') || '[]');
 
-      // Parse JSON data if available, otherwise use empty arrays
-      this.depositoHistory = depositoData ? JSON.parse(depositoData) : [];
-      this.topupHistory = topupData ? JSON.parse(topupData) : [];
-      this.otherHistory = otherData ? JSON.parse(otherData) : [];
+      // Gabungkan semua data riwayat
+      this.combinedHistory = [...depositoData, ...topupData, ...otherData];
+
+      // Urutkan riwayat berdasarkan tanggal (opsional)
+      this.combinedHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
     },
     saveHistoryData() {
-      // Save history data to localStorage
-      localStorage.setItem('depositoHistory', JSON.stringify(this.depositoHistory));
-      localStorage.setItem('topupHistory', JSON.stringify(this.topupHistory));
-      localStorage.setItem('otherHistory', JSON.stringify(this.otherHistory));
+      // Simpan riwayat transaksi ke localStorage
+      localStorage.setItem('combinedHistory', JSON.stringify(this.combinedHistory));
     },
-    addDepositoTransaction(transaction) {
-      // Add a new deposito transaction and save to localStorage
-      this.depositoHistory.push(transaction);
-      this.saveHistoryData();
-    },
-    addTopupTransaction(transaction) {
-      // Add a new topup transaction and save to localStorage
-      this.topupHistory.push(transaction);
-      this.saveHistoryData();
-    },
-    addOtherTransaction(transaction) {
-      // Add a new other transaction and save to localStorage
-      this.otherHistory.push(transaction);
+    addTransaction(transaction) {
+      // Tambahkan transaksi baru ke daftar riwayat
+      this.combinedHistory.push(transaction);
       this.saveHistoryData();
     },
   },

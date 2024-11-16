@@ -10,7 +10,7 @@
         <v-row>
           <v-col cols="12" md="6">
             <v-card class="balance-value-card" outlined>
-              <v-card-title>*norek*</v-card-title>
+              <v-card-title>8881567765</v-card-title>
               <v-card-text>
                 <span class="balance-amount">Rp {{ balance.toLocaleString() }}</span>
               </v-card-text>

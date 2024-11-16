@@ -5,7 +5,7 @@
       <v-select
         v-model="selectedDepositId"
         :items="depositTypes"
-        item-text="name"
+        item-text="id"
         item-value="id"
         label="Pilih Tipe Deposito"
         dense

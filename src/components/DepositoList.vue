@@ -56,6 +56,13 @@ export default {
           minAmount: 50000000,
           maxAmount: 100000000,
         },
+        {
+          id: 'D003',
+          name: 'Deposito X',
+          interestRate: 7.5,
+          minAmount: 500000000,
+          maxAmount: 1000000000,
+        }
       ],
       isDialogOpen: false,
       selectedType: {},

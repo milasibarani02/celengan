@@ -1,8 +1,5 @@
 <template>
   <v-card :style="{ backgroundColor: '#F5ECED' }" class="pa-4 my-deposito-card">
-    <!-- Judul -->
-    <!-- <v-card-title class="headline" :style="{ color: '#34495E' }">My Deposito</v-card-title> -->
-
     <!-- Daftar Deposito -->
     <v-card-text>
       <v-list v-if="myDeposits.length > 0">
@@ -11,10 +8,10 @@
           :key="index"
           class="deposit-item"
         >
-            <v-list-item-title :style="{ color: '#34495E' }">{{ deposit.name }}</v-list-item-title>
-            <v-list-item-subtitle :style="{ color: '#7FA1C4' }">
-              Amount: {{ formatCurrency(deposit.amount) }}
-            </v-list-item-subtitle>
+          <v-list-item-title :style="{ color: '#34495E' }">{{ deposit.tabunganName }}</v-list-item-title>
+          <v-list-item-subtitle :style="{ color: '#34495E' }">
+            Amount: {{ formatCurrency(deposit.amount) }}
+          </v-list-item-subtitle>
         </v-list-item>
       </v-list>
 
@@ -43,7 +40,7 @@ import { defineComponent, PropType } from 'vue';
 import { useRouter } from 'vue-router';
 
 interface Deposit {
-  name: string;
+  tabunganName: string;
   amount: number;
 }
 
@@ -88,11 +85,6 @@ export default defineComponent({
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.headline {
-  font-weight: bold;
-  color: #34495E; /* Neutral Dark for text */
-}
-
 /* Styling untuk List Deposito */
 .v-list-item-title {
   color: #34495E; /* Neutral Dark for text */
@@ -125,27 +117,5 @@ export default defineComponent({
 
 .add-deposito-btn:hover {
   background-color: #51729C; /* Slightly darker Primary color for hover effect */
-}
-
-/* Styling untuk tombol dan aksi */
-.v-btn {
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-.v-btn.primary {
-  background-color: #6582AE; /* Primary color for the button */
-  color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.v-btn.secondary {
-  background-color: #7FA1C4; /* Secondary color for the button */
-  color: white;
-  border: 1px solid #E2DAD7; /* Neutral Medium border */
-}
-
-.v-btn:hover {
-  opacity: 0.9;
 }
 </style>

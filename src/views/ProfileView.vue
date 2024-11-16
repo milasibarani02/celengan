@@ -14,14 +14,14 @@
 
     <!-- Full Name with Edit Icon -->
     <v-row justify="center">
-      <v-col cols="12" class="text-center">
+      <v-col cols="8" class="text-center">
         <v-card :style="{ backgroundColor: '#F5ECED', borderColor: '#E2DAD7', borderWidth: '1px' }">
           <v-card-text class="text-h5" :style="{ color: '#34495E' }">
             {{ fullName }}
             <v-btn
               icon
               @click="goToProfileForm"
-              class="ml-2"
+              class="ml-4"
               color="#7FA1C4"
             >
               <!-- Ganti ikon pencil dengan gambar Edit.png -->
